@@ -1,0 +1,17 @@
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest   # Use the latest official Pi-hole image
+    network_mode: host            # Use host networking so Pi-hole can respond directly to DNS/DHCP requests
+    restart: unless-stopped       # Always restart container unless explicitly stopped
+
+    # ENV VAR below pulled from .env (edit the file accordingly)
+    environment:
+      TZ: ${TZ}
+      FTLCONF_webserver_api_password: ${PIHOLE_PASSWORD}
+      FTLCONF_dns_upstreams: ${DNS_SERVERS}
+      FTLCONF_dns_listeningMode: 'all'      
+    volumes:
+      - './etc-pihole:/etc/pihole'  # Mount local directories to keep config/data across restarts
+    cap_add:
+      - NET_ADMIN
